@@ -1,17 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-
-const MAX_LENGTH = 10;
-
-const generateBoard = () => {
-  const board = Array(MAX_LENGTH).fill(0).map(row => Array(MAX_LENGTH).fill(0));
-  const seed = [[4,5], [4,6], [4,7], [5,5], [5,6], [5,7]];
-  const withSeed = seed.reduce((state, point) => {
-    const [x, y] = point;
-    state[x][y] = 1;
-    return state;
-  }, board);
-  return withSeed;
-}
+import React, { useState } from 'react';
+import useTic from '../util/useTic';
+import generateInitialState from '../util/initialState';
 
 const Cell = ({ cellState }) => {
   return (
@@ -19,21 +8,8 @@ const Cell = ({ cellState }) => {
   )
 }
 
-function useInterval(callback) {
-  const savedCallback = useRef();
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  useEffect(() => {
-    const tick = () => savedCallback.current();
-    let id = setInterval(tick, 2000);
-    return () => clearInterval(id);
-  }, []);
-}
-
 export default function GameBoard() {
-  const [boardState, setBoardState] = useState(generateBoard());
+  const [boardState, setBoardState] = useState(generateInitialState());
   const stateForCell = (x, y) => {
     const prevState = boardState[x][y];
     const aliveNeighbours = boardState
@@ -46,8 +22,9 @@ export default function GameBoard() {
     return 0;
   }
 
-  const calculateTic = () => {
-    const newBoardState = boardState.map(((row, rowIndex) => row.map((col, colIndex) => stateForCell(rowIndex, colIndex))));
+  const doTic = () => {
+    const newBoardState = boardState
+      .map(((row, rowIndex) => row.map((col, colIndex) => stateForCell(rowIndex, colIndex))));
     setBoardState(newBoardState);
   }
   /**useEffect(async () => {
@@ -60,7 +37,7 @@ export default function GameBoard() {
     console.log("With seed", withSeed)
     setBoardState(withSeed);
   }, []);**/
-  useInterval(() => calculateTic());
+  useTic(() => doTic());
   return (
     <div className="Board">
       {
