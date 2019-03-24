@@ -26,6 +26,10 @@
   color: white;
 }
 
+.App-footer {
+  height: 10vh;
+}
+
 .App-link {
   color: #61dafb;
 }
@@ -39,17 +43,21 @@
   }
 }
 
+input[type="text"]
+{
+    font-size: 1em;
+}
+
 .Board {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  max-width: 600px
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(30px, auto);
+  width: 75%;
+  height: 70vh;
 }
 
 .Cell {
-  width: 50px;
-  height: 50px;
-  margin: 5px;
 }
 
 .Cell__alive {
@@ -58,4 +66,22 @@
 
 .Cell__dead {
   background-color: white;
+}
+
+.BoardSize {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20vh;
+}
+
+.BoardSize-wrapper {
+  display: flex;
+  flex-direction: 'row';
+  font-size: 1.5em;
+  color: white;
+}
+
+.BoardSize-wrapper > label {
+  margin-right: 10px;
 }

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useTic from '../util/useTic';
 import generateInitialState from '../util/initialState';
+import { types, useGameContext } from '../GameContext';
 
 const Cell = ({ cellState }) => {
   return (
@@ -9,7 +10,9 @@ const Cell = ({ cellState }) => {
 }
 
 export default function GameBoard() {
-  const [boardState, setBoardState] = useState(generateInitialState());
+  const [state, dispatch] = useGameContext();
+  const [boardState, setBoardState] = useState(generateInitialState(state.size));
+
   const stateForCell = (x, y) => {
     const prevState = boardState[x][y];
     const aliveNeighbours = boardState
@@ -27,22 +30,23 @@ export default function GameBoard() {
       .map(((row, rowIndex) => row.map((col, colIndex) => stateForCell(rowIndex, colIndex))));
     setBoardState(newBoardState);
   }
-  /**useEffect(async () => {
-    const seed = await initialDataGenerator();
-    const withSeed = seed.reduce((state, point) => {
-      const [x, y] = point;
-      state[x][y] = 1;
-      return state;
-    }, boardState);
-    console.log("With seed", withSeed)
-    setBoardState(withSeed);
-  }, []);**/
+
+  useEffect(() => {
+    setBoardState(generateInitialState(state.size))
+  }, [state.size]);
+
   useTic(() => doTic());
   return (
-    <div className="Board">
+    <div className="Board" style={{ gridTemplateColumns: `repeat(${state.size}, 1fr)` }}>
       {
         boardState.map((row, rowIndex) => row.map((col, colIndex) => {
-          return <Cell key={`cell-${rowIndex}-${colIndex}`} cellState={boardState[rowIndex][colIndex]} />
+          return (
+            <Cell
+                style={{ width: `100/${state.size}%`, height: `100/${state.size}%` }}
+                key={`cell-${rowIndex}-${colIndex}`}
+                cellState={boardState[rowIndex][colIndex]}
+              />
+          );
         }))
       }
     </div>
