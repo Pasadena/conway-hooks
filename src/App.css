@@ -58,6 +58,7 @@ input[type="text"]
 }
 
 .Cell {
+  cursor: pointer;
 }
 
 .Cell__alive {
@@ -66,6 +67,11 @@ input[type="text"]
 
 .Cell__dead {
   background-color: white;
+}
+
+.Cell__seed {
+  border: 2px solid blue;
+  opacity: 0.8;
 }
 
 .BoardSize {
